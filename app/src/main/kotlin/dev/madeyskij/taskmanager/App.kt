@@ -3,13 +3,46 @@
  */
 package dev.madeyskij.taskmanager
 
-class App {
-    val greeting: String
-        get() {
-            return "Hello World!"
+fun main() {
+    val taskManager = TaskManager()
+
+    while (true) {
+        showMenu()
+        val choice = readLine()?.toIntOrNull()
+
+        when (choice) {
+            1 -> addTask(taskManager)
+            2 -> viewTasks(taskManager)
+            // 3 -> completeTask(taskManager)
+            4 -> break
+            else -> println("Invalid choice")
         }
+    }
 }
 
-fun main() {
-    println(App().greeting)
+fun showMenu() {
+    println("1. Add task")
+    println("2. View tasks")
+    println("3. Complete tas")
+    println("4. Exit")
+}
+
+fun addTask(taskManager: TaskManager) {
+    println("Enter task title:")
+    val title = readLine() ?: "Task"
+    println("Enter task description:")
+    val description = readLine() ?: ""
+    println("Enter task priority (1-3):")
+    val priority = readLine()?.toIntOrNull()?.let { Priority.values()[it - 1] } ?: Priority.MEDIUM
+    taskManager.addTask(title, description, priority)
+}
+
+fun viewTasks(taskManager: TaskManager) {
+    val tasks = taskManager.getAllTasks()
+    if (tasks.isEmpty()) {
+        println("No tasks found")
+    } else {
+        println("Tasks:")
+        tasks.forEach { task -> println("${task.id} - ${task.title} - ${task.description} - ${task.priority}") }
+    }
 }
